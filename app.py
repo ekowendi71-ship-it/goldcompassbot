@@ -10,7 +10,19 @@ CHAT_ID = os.environ.get("CHAT_ID")
 @app.route("/")
 def home():
     return "Webhook aktif!"
+@app.route("/test")
+def test():
+    url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
 
+    requests.post(
+        url,
+        json={
+            "chat_id": CHAT_ID,
+            "text": "🧪 TEST MONEYCATOR AI\n\n✅ Railway Online\n✅ Webhook OK\n✅ Telegram OK"
+        }
+    )
+
+    return "Test berhasil!"
 @app.route("/webhook", methods=["POST"])
 def webhook():
     try:
