@@ -15,10 +15,24 @@ def home():
 def webhook():
     try:
         if request.is_json:
-            data = request.get_json(silent=True)
-            message = data.get("message", str(data))
-        else:
-            message = request.data.decode("utf-8")
+    data = request.get_json(silent=True)
+
+    signal = data.get("signal", "-")
+    symbol = data.get("symbol", "-")
+    timeframe = data.get("timeframe", "-")
+    price = data.get("price", "-")
+
+    icon = "🟢" if signal == "BUY" else "🔴"
+
+    message = f"""{icon} MONEYCATOR AI
+
+📈 Signal : {signal}
+📊 Symbol : {symbol}
+⏰ Timeframe : {timeframe}
+💰 Entry : {price}"""
+
+else:
+    message = request.data.decode("utf-8")
 
         url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
 
