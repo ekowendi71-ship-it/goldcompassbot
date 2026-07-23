@@ -7,9 +7,12 @@ app = Flask(__name__)
 BOT_TOKEN = os.environ.get("BOT_TOKEN")
 CHAT_ID = os.environ.get("CHAT_ID")
 
+
 @app.route("/")
 def home():
-    return "Webhook aktif!"
+    return "Moneycator Webhook Online"
+
+
 @app.route("/test")
 def test():
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
@@ -23,28 +26,30 @@ def test():
     )
 
     return "Test berhasil!"
+
+
 @app.route("/webhook", methods=["POST"])
 def webhook():
     try:
         if request.is_json:
-    data = request.get_json(silent=True)
+            data = request.get_json(silent=True)
 
-    signal = data.get("signal", "-")
-    symbol = data.get("symbol", "-")
-    timeframe = data.get("timeframe", "-")
-    price = data.get("price", "-")
+            signal = data.get("signal", "-")
+            symbol = data.get("symbol", "-")
+            timeframe = data.get("timeframe", "-")
+            price = data.get("price", "-")
 
-    icon = "🟢" if signal == "BUY" else "🔴"
+            icon = "🟢" if signal == "BUY" else "🔴"
 
-    message = f"""{icon} MONEYCATOR AI
+            message = f"""{icon} MONEYCATOR AI
 
 📈 Signal : {signal}
 📊 Symbol : {symbol}
 ⏰ Timeframe : {timeframe}
 💰 Entry : {price}"""
 
-else:
-    message = request.data.decode("utf-8")
+        else:
+            message = request.data.decode("utf-8")
 
         url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
 
@@ -60,6 +65,7 @@ else:
 
     except Exception as e:
         return str(e), 500
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080)
